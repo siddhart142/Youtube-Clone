@@ -1,6 +1,8 @@
 import './App.css';
 import Body from './Components/Body';
 import Head from './Components/Head';
+import { Provider } from 'react-redux';
+import store from './Utils/store';
   {/*
       Head
       Body
@@ -13,10 +15,12 @@ import Head from './Components/Head';
    */}
 function App() {
   return (
-    <div className="font-extrabold">
+    <Provider store={store}>
+    <div className="">
       <Head/>
       <Body/>
     </div>
+    </Provider>
   );
 }
 
