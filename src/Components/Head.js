@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { toggleMenu } from '../Utils/appSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { YOUTUBE_SEARCH_API } from '../Utils/Constants';
-
+import { cachedResults } from '../Utils/searchSlice';
+import store from '../Utils/store';
 const Head = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestion,setSuggestion] = useState([]);
-  const [showSuggestion, setShowSuggestion] = useState(false)
+  const [showSuggestion, setShowSuggestion] = useState(false);
+
+  const dispatch = useDispatch();
+  const searchCache = useSelector(store => store.search)
  
   const getSearchQuerySuggestions = async () => {
     // console.log(searchQuery)
@@ -15,12 +19,27 @@ const Head = () => {
     const json = await data.json();
     // console.log(json[1])
     setSuggestion(json[1]);
-  }
+
+    //update cache
+    dispatch(cachedResults({
+      [searchQuery]: json[1],
+    })
+    );
+  };
   useEffect(()=>{
     //MAKE AN API CALL AFTER EVERY KEY PRESS
     // BUT IF THE DIFF BETWEEN 2 API CALLS IS <200MS
     // DECLINE THE API CALL
-    const timer = setTimeout(()=> getSearchQuerySuggestions(),200);
+    const timer = setTimeout(()=> 
+    {
+      if(searchCache[searchQuery]){
+        setSuggestion(setSuggestion(searchCache[searchQuery]))
+      }
+      else
+      {
+        getSearchQuerySuggestions()
+      }
+    },200);
 
     return () => {
       clearTimeout(timer);
@@ -28,7 +47,7 @@ const Head = () => {
   },[searchQuery])
 
 
-  const dispatch = useDispatch()
+  
 
   const toggleMenuHandler = ()=>{
 
@@ -48,7 +67,7 @@ const Head = () => {
         </div>
         {showSuggestion && <div className='w-[59rem] bg-white fixed  rounded-2xl shadow-lg border-2 '>
           <ul className='m-4 font-medium'>
-          {suggestion.map((sug)=> <li key={sug} className='p-2 hover:bg-gray-100 rounded-md'>🔍 {sug}</li>)}
+          {suggestion?.map((sug)=> <li key={sug} className='p-2 hover:bg-gray-100 rounded-md'>🔍 {sug}</li>)}
             {/* <li className='p-2 hover:bg-gray-100 rounded-md'>🔍 iphone</li>
             <li className='p-2'>🔍 iphone</li>
             <li className='p-2'>🔍 iphone</li>
