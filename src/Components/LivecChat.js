@@ -27,7 +27,7 @@ const LivecChat = () => {
 
 
   return (
-    <div className='h-[900px] border w-full rounded-lg bg-gray-50 overflow-y-scroll '>
+    <div className='h-[900px] border w-full rounded-lg bg-gray-50 overflow-y-scroll flex flex-col-reverse'>
       {/* <Chatmsg name="Sid" msg="Hello world" /> */}
       
       {chatMsg.map((c)=> (
