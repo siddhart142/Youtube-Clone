@@ -8,9 +8,9 @@ const searchSlice = createSlice({
     reducers : {
         cachedResults : (state,action) =>{
             // state = {...action.payload, ...state}
-            // Object.assign(state,action.payload);
+            Object.assign(state,action.payload);
             
-            return { ...state, ...action.payload }; //es6 way
+            // return { ...state, ...action.payload }; //es6 way
           
         },
     }

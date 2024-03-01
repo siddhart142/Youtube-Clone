@@ -37,7 +37,7 @@ const Head = () => {
       }
       else
       {
-        getSearchQuerySuggestions()
+        searchQuery && getSearchQuerySuggestions()
       }
     },200);
 
